@@ -11,6 +11,8 @@ app.get("/home", (req, res) => {
 app.get("/haha", (req, res) => {
   res.send({
     message: "Hello folks from Restrictify!",
+    text: process.env.POSTGRES_USER,
+    status: "success",
   });
 });
 
