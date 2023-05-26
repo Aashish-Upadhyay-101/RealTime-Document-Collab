@@ -1,6 +1,3 @@
-# stephenrigder -> kubernetes deployment image upload to docker hub for every changes issue !!!
-# and code not reflecting issue
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
