@@ -3,6 +3,7 @@ services:
   db:
     image: postgres
     container_name: restrictify-postgres-dev
+    restart: always
     ports:
       - 5432:5432
     volumes:
@@ -16,15 +17,19 @@ services:
     container_name: restrictify-auth-service
     restart: unless-stopped
     build:
-      context: .
-      dockerfile: ./services/auth/Dockerfile
+      context: ./services/auth
+      dockerfile: ./Dockerfile
     ports:
       - 8000:8000
     depends_on:
       - db
     volumes:
-      - ./services/auth/src:/app/auth/src
-      - /app/auth/node_modules
+      - ./services/auth/src:/app/services/auth/src
+      - /app/services/auth/node_modules
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://restrictify:restrictify@localhost:5432/restrictify
 
 volumes:
   pgdata:

@@ -1,15 +1,27 @@
-FROM node:alpine 
+FROM node:16-alpine AS build
 
-WORKDIR /app 
+WORKDIR /app/services/auth 
 
-COPY package*.json .
+COPY ./package.json /app/services/auth/
 
 RUN npm install --only-production
 
 COPY . . 
 
-RUN npm install -g ts-node
+RUN npm run build
 
-RUN npm install -g nodemon
+# prod
 
-CMD ["nodemon", "--watch", "src", "--exec", "ts-node", "src/index.ts"]
+FROM node:16-alpine
+
+WORKDIR /app/services/auth 
+
+COPY ./package.json /app/services/auth/
+
+RUN npm install --only-production
+
+COPY --from=build /app/services/auth .
+
+EXPOSE 8000
+
+CMD ["npm", "run", "start"]
