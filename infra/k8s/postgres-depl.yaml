@@ -18,8 +18,8 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             limits:
-              memory: "700Mi"
-              cpu: "500m"
+              memory: "900Mi"
+              cpu: "700m"
           ports:
             - containerPort: 5432
           envFrom:
@@ -46,4 +46,3 @@ spec:
     - port: 5432
   selector:
     app: postgres
-# 10.96.102.32
