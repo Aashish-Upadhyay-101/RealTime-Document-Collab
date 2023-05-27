@@ -19,9 +19,6 @@ spec:
             limits:
               memory: "400Mi"
               cpu: "500m"
-          envFrom:
-            - configMapRef:
-                name: postgres-config
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
