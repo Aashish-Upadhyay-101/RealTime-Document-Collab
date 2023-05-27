@@ -12,5 +12,19 @@ services:
       - POSTGRES_USER=restrictify
       - POSTGRES_PASSWORD=restrictify
 
+  auth:
+    container_name: restrictify-auth-service
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./services/auth/Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ./services/auth/src:/app/auth/src
+      - /app/node_modules
+
 volumes:
   pgdata:
