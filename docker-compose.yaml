@@ -24,7 +24,7 @@ services:
       - db
     volumes:
       - ./services/auth/src:/app/auth/src
-      - /app/node_modules
+      - /app/auth/node_modules
 
 volumes:
   pgdata:
