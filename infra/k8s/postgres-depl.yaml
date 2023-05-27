@@ -46,4 +46,4 @@ spec:
     - port: 5432
   selector:
     app: postgres
-# git rm --cached ./infra/k8s/postgres/postgres-config.yaml
+# 10.96.102.32
