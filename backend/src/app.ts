@@ -1,26 +1,10 @@
 import express, { Express } from "express";
 require("dotenv").config();
 
+import { authRouter } from "./auth/routes/auth";
+
 const app: Express = express();
 
-app.get("/home", (req, res) => {
-  res.send({
-    message: "home page !",
-  });
-});
-
-app.get("/haha", (req, res) => {
-  res.send({
-    message: "Hello folks from Restrictify!",
-    text: process.env.POSTGRES_USER,
-    status: "success",
-  });
-});
-
-app.get("/", (req, res) => {
-  res.send({
-    message: "index page",
-  });
-});
+app.use("/api/auth", authRouter);
 
 export default app;
