@@ -1,18 +1,5 @@
 version: "3"
 services:
-  nginx:
-    container_name: restrictify-nginx-dev
-    image: nginx
-    restart: always
-    volumes:
-      - ./nginx/default-restrictify-dev.conf:/etc/nginx/conf.d/default.conf:rw
-    ports:
-      - 8080:80
-    depends_on:
-      - auth
-    networks:
-      - restrictify-dev
-
   db:
     image: postgres
     container_name: restrictify-postgres-dev
@@ -28,19 +15,19 @@ services:
     networks:
       - restrictify-dev
 
-  auth:
-    container_name: restrictify-auth-service
+  backend:
+    container_name: restrictify-backend-service
     restart: unless-stopped
     build:
-      context: ./services/auth
+      context: ./backend
       dockerfile: ./Dockerfile
     ports:
       - 8000:8000
     depends_on:
       - db
     volumes:
-      - ./services/auth/src:/app/services/auth/src
-      - /app/services/auth/node_modules
+      - ./backend/src:/app/backend/src
+      - /app/backend/node_modules
     command: npm run dev
     environment:
       - NODE_ENV=development

@@ -1,8 +1,8 @@
 FROM node:16-alpine AS build
 
-WORKDIR /app/services/auth 
+WORKDIR /app/backend
 
-COPY ./package.json /app/services/auth/
+COPY ./package.json /app/backend/
 
 RUN npm install --only-production
 
@@ -14,13 +14,13 @@ RUN npm run build
 
 FROM node:16-alpine
 
-WORKDIR /app/services/auth 
+WORKDIR /app/backend 
 
-COPY ./package.json /app/services/auth/
+COPY ./package.json /app/backend/
 
 RUN npm install --only-production
 
-COPY --from=build /app/services/auth .
+COPY --from=build /app/backend .
 
 EXPOSE 8000
 
