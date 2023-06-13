@@ -3,7 +3,7 @@ abstract class BaseError extends Error {
 
   constructor(message: string) {
     super(message);
-    Error.captureStackTrace(this);
+    Error.captureStackTrace(this, this.constructor);
     Object.setPrototypeOf(this, BaseError.prototype);
   }
 
