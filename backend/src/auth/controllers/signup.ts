@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import validator from "validator";
 import { BadRequestError } from "../../common/errors/bad-request-error";
+import { checkIfUserExists } from "../../prisma/helper/auth";
 
-export const signup = (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, firstName, lastName, email, password, passwordConfirm } =
     req.body;
 
@@ -36,6 +41,13 @@ export const signup = (req: Request, res: Response, next: NextFunction) => {
   }
 
   // check if user already exists
+  if (checkIfUserExists(username)) {
+    return next(new BadRequestError("User with that username already exits."));
+  }
+
+  if (checkIfUserExists(email)) {
+    return next(new BadRequestError("User with that email already exits."));
+  }
 
   // hash password using best hashing algorithm
 
