@@ -14,7 +14,7 @@ enum IdentityProvider {
 
 model User {
   id               Int               @id @default(autoincrement())
-  usename          String            @unique
+  username         String            @unique
   firstName        String
   lastName         String
   email            String            @unique
