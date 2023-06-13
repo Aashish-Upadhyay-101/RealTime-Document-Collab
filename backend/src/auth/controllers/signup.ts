@@ -41,11 +41,11 @@ export const signup = async (
   }
 
   // check if user already exists
-  if (checkIfUserExists(username)) {
+  if (await checkIfUserExists(username)) {
     return next(new BadRequestError("User with that username already exits."));
   }
 
-  if (checkIfUserExists(email)) {
+  if (await checkIfUserExists(email)) {
     return next(new BadRequestError("User with that email already exits."));
   }
 
