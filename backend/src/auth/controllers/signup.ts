@@ -49,7 +49,8 @@ export const signup = async (
     return next(new BadRequestError("User with that email already exits."));
   }
 
-  // hash password using best hashing algorithm
+  // hash password
+  
 
   // create the user and save to database
 
