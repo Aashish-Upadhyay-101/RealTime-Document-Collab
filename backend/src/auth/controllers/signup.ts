@@ -50,7 +50,6 @@ export const signup = async (
   }
 
   // hash password
-  
 
   // create the user and save to database
 

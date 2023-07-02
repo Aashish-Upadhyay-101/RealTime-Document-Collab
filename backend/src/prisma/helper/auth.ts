@@ -1,9 +1,9 @@
-import restrictifyPrisma from "../prisma";
+import prisma from "../prisma";
 
 export const checkIfUserExists = async (
   identifier: string
 ): Promise<boolean> => {
-  const user = await restrictifyPrisma.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       usename: identifier,
       OR: {
@@ -17,3 +17,13 @@ export const checkIfUserExists = async (
 
   return false;
 };
+
+// password hashing
+prisma.$use(async (params, next) => {
+  if (params.model === "User") {
+    if (params.action === "create" || params.action === "update") {
+      console.log(params);
+      console.log(params.args);
+    }
+  }
+});
