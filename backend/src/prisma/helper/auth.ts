@@ -1,16 +1,22 @@
 import prisma from "../prisma";
+import { Password } from "./password";
 
 export const checkIfUserExists = async (
   identifier: string
 ): Promise<boolean> => {
   const user = await prisma.user.findFirst({
     where: {
-      usename: identifier,
-      OR: {
-        email: identifier,
-      },
+      OR: [
+        {
+          username: identifier,
+        },
+        {
+          email: identifier,
+        },
+      ],
     },
   });
+
   if (user) {
     return true;
   }
@@ -22,8 +28,12 @@ export const checkIfUserExists = async (
 prisma.$use(async (params, next) => {
   if (params.model === "User") {
     if (params.action === "create" || params.action === "update") {
-      console.log(params);
-      console.log(params.args);
+      const user = params.args.data;
+      if (user.password) {
+        const getHashedPassword = await Password.hashPassword(user.password);
+        user.password = getHashedPassword;
+      }
     }
   }
+  return next(params);
 });

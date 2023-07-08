@@ -1,3 +1,7 @@
 import { Request, Response } from "express";
 
-export const getMe = (req: Request, res: Response) => {};
+export const getMe = (req: Request, res: Response) => {
+  res.send({
+    me: "haha",
+  });
+};

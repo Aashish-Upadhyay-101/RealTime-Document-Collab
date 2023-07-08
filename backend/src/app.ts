@@ -6,6 +6,7 @@ require("dotenv").config();
 import { authRouter } from "./auth/routes/auth";
 
 const app: Express = express();
+app.use(express.json());
 
 app.use("/api/auth", authRouter);
 

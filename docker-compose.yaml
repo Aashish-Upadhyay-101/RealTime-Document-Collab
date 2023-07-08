@@ -2,21 +2,21 @@ version: "3"
 services:
   db:
     image: postgres
-    container_name: restrictify-postgres-dev
+    container_name: easydev-postgres-dev
     restart: always
     ports:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=restrictify
-      - POSTGRES_USER=restrictify
-      - POSTGRES_PASSWORD=restrictify
+      - POSTGRES_DB=easydev
+      - POSTGRES_USER=easydev
+      - POSTGRES_PASSWORD=easydev
     networks:
-      - restrictify-dev
+      - easydev-dev
 
   backend:
-    container_name: restrictify-backend-service
+    container_name: easydev-backend-service
     restart: unless-stopped
     build:
       context: ./backend
@@ -31,12 +31,12 @@ services:
     command: npm run dev
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgres://restrictify:restrictify@localhost:5432/restrictify
+      - DATABASE_URL=postgres://easydev:easydev@localhost:5432/easydev
     networks:
-      - restrictify-dev
+      - easydev-dev
 
 volumes:
   pgdata:
 
 networks:
-  restrictify-dev:
+  easydev-dev:
