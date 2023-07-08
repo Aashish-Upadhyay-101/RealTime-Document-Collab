@@ -70,6 +70,8 @@ export const signup = async (
     },
   });
 
+  // generate jwt
+
   // TODO: using kafka, send email verification mail
   // send verification mail
   // verify the new user
