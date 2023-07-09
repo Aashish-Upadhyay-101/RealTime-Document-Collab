@@ -1,10 +1,4 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { promisify } from "util";
-
-interface IToken {
-  token: string;
-  type: string;
-}
 
 export class Token {
   private static generateAccessAuthToken = (id: string) => {
