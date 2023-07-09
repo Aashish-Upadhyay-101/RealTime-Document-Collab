@@ -4,6 +4,7 @@ import { BadRequestError } from "../../common/errors/bad-request-error";
 import { checkIfUserExists } from "../../prisma/helper/auth";
 import prisma from "../../prisma/prisma";
 import { Token } from "../utils/jwt";
+import { setAuthCookie } from "../utils/cookie";
 
 export const signup = async (
   req: Request,
@@ -83,10 +84,7 @@ export const signup = async (
     },
   });
 
-  res.cookie("auth_token", token, {
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    httpOnly: true,
-  });
+  setAuthCookie(res, token);
 
   // TODO: using kafka, send email verification mail
   // send verification mail

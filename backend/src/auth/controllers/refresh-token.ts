@@ -3,6 +3,7 @@ import { NotAuthorized } from "../../common/errors/not-authorized";
 import prisma from "../../prisma/prisma";
 import { Forbidden } from "../../common/errors/forbidden";
 import { Token } from "../utils/jwt";
+import { setAuthCookie } from "../utils/cookie";
 
 export const refreshToken = async (
   req: Request,
@@ -31,10 +32,7 @@ export const refreshToken = async (
     refresh: refreshToken,
   };
 
-  res.cookie("auth_token", newTokenPair, {
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    httpOnly: true,
-  });
+  setAuthCookie(res, newTokenPair);
 
   res.status(201).json({
     access: accessToken,

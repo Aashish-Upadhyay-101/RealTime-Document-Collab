@@ -3,6 +3,7 @@ import { BadRequestError } from "../../common/errors/bad-request-error";
 import { checkIfUserExists } from "../../prisma/helper/auth";
 import { Token } from "../utils/jwt";
 import prisma from "../../prisma/prisma";
+import { setAuthCookie } from "../utils/cookie";
 
 export const login = async (
   req: Request,
@@ -42,10 +43,7 @@ export const login = async (
     },
   });
 
-  res.cookie("auth_token", token, {
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    httpOnly: true,
-  });
+  setAuthCookie(res, token);
 
   res.status(200).json({
     message: "login successful",
