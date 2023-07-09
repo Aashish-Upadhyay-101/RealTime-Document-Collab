@@ -1,8 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { BadRequestError } from "../../common/errors/bad-request-error";
 import { checkIfUserExists } from "../../prisma/helper/auth";
+import { Token } from "../utils/jwt";
+import prisma from "../../prisma/prisma";
 
-export const login = (req: Request, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
 
   if (!email) {
@@ -19,8 +25,30 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     );
   }
 
-  // log user in
-  // generate jwt token
-  // set to response cookie
-  // send json response
+  const user = await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  const token = Token.generateAuthToken(user?.id as string);
+  const refreshToken = token.refresh;
+  await prisma.refreshToken.update({
+    where: {
+      userId: user?.id as string,
+    },
+    data: {
+      token: refreshToken,
+    },
+  });
+
+  res.cookie("auth_token", token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    message: "login successful",
+    token,
+  });
 };

@@ -10,14 +10,24 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  firstName  String
-  lastName   String
-  email      String   @unique
-  password   String
-  isActive   Boolean?
-  isVerified Boolean?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String        @id @default(uuid())
+  username     String        @unique
+  firstName    String
+  lastName     String
+  email        String        @unique
+  password     String
+  RefreshToken RefreshToken?
+  isActive     Boolean?
+  isVerified   Boolean?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

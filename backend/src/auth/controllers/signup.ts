@@ -3,6 +3,7 @@ import validator from "validator";
 import { BadRequestError } from "../../common/errors/bad-request-error";
 import { checkIfUserExists } from "../../prisma/helper/auth";
 import prisma from "../../prisma/prisma";
+import { Token } from "../utils/jwt";
 
 export const signup = async (
   req: Request,
@@ -71,14 +72,29 @@ export const signup = async (
   });
 
   // generate jwt
+  const token = Token.generateAuthToken(user.id);
+
+  // save generated refresh token to the database
+  const refreshToken = token.refresh;
+  await prisma.refreshToken.create({
+    data: {
+      token: refreshToken,
+      userId: user.id,
+    },
+  });
+
+  res.cookie("auth_token", token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    httpOnly: true,
+  });
 
   // TODO: using kafka, send email verification mail
   // send verification mail
   // verify the new user
 
   // send created response
-  res.status(200).json({
+  res.status(201).json({
     message: "signup successful",
-    data: user,
+    token,
   });
 };
