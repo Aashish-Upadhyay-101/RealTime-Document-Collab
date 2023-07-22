@@ -51,5 +51,5 @@ model Collaborator {
   user       User     @relation(fields: [userId], references: [id])
   documentId String
   document   Document @relation(fields: [documentId], references: [id])
-  permission String
+  permission String?  @default("READ")
 }

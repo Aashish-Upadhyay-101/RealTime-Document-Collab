@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import { create } from "domain";
 
 export const createDoc = async (
   req: Request,
@@ -19,6 +18,14 @@ export const createDoc = async (
             id: req.user?.id,
           },
         },
+        Collaborator: {
+          create: {
+            userId: req.user?.id as string,
+          },
+        },
+      },
+      include: {
+        Collaborator: true,
       },
     })
     .catch((err) => next(err));
