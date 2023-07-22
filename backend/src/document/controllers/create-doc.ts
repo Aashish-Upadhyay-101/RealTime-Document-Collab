@@ -6,7 +6,11 @@ export const createDoc = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { title, content } = req.body;
+  let { title, content } = req.body;
+
+  if (!title) title = "";
+
+  if (!content) content = "";
 
   const document = await prisma.document
     .create({

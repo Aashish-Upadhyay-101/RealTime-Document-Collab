@@ -36,8 +36,8 @@ model RefreshToken {
 
 model Document {
   id           String         @id @default(uuid())
-  title        String
-  content      String
+  title        String?
+  content      String?
   userId       String         @unique
   user         User           @relation(fields: [userId], references: [id])
   Collaborator Collaborator[]
