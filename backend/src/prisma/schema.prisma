@@ -10,17 +10,19 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  username     String        @unique
+  id           String         @id @default(uuid())
+  username     String         @unique
   firstName    String
   lastName     String
-  email        String        @unique
+  email        String         @unique
   password     String
   RefreshToken RefreshToken?
+  document     Document[]
+  Collaborator Collaborator[]
   isActive     Boolean?
   isVerified   Boolean?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model RefreshToken {
@@ -30,4 +32,24 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id           String         @id @default(uuid())
+  title        String
+  content      String
+  userId       String         @unique
+  user         User           @relation(fields: [userId], references: [id])
+  Collaborator Collaborator[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Collaborator {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+  permission String
 }
