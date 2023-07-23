@@ -8,7 +8,7 @@ export const createDoc = async (
 ) => {
   let { title, content } = req.body;
 
-  if (!title) title = "";
+  if (!title) title = "Untitled";
 
   if (!content) content = "";
 
@@ -19,12 +19,14 @@ export const createDoc = async (
         content,
         user: {
           connect: {
-            id: req.user?.id,
+            id: "b84233dc-487c-46e9-b250-a3b7e4f5326f",
+            // id: req.user?.id,
           },
         },
         Collaborator: {
           create: {
-            userId: req.user?.id as string,
+            userId: "b84233dc-487c-46e9-b250-a3b7e4f5326f",
+            // userId: req.user?.id as string,
           },
         },
       },
