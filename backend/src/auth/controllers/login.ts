@@ -32,6 +32,10 @@ export const login = async (
     },
   });
 
+  if (!user) {
+    return next(new BadRequestError("User doesn't exist, please signup first"));
+  }
+
   const token = Token.generateAuthToken(user?.id as string);
   const refreshToken = token.refresh;
   await prisma.refreshToken.update({

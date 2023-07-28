@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 export class Token {
   private static generateAccessAuthToken = (id: string) => {
     return jwt.sign({ id }, process.env.JWT_ACCESS_TOKEN_SECRET as string, {
-      expiresIn: 1000 * 60,
+      expiresIn: 1000 * 60 * 60,
     });
   };
 

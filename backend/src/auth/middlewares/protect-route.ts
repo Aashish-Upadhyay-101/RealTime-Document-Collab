@@ -15,8 +15,8 @@ export const authProtected = async (
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.auth_token) {
-    token = req.cookies.auth_token;
+  } else if (req.cookies?.auth_token) {
+    token = req.cookies?.auth_token;
   }
 
   if (!token) {
@@ -35,8 +35,6 @@ export const authProtected = async (
       id,
     },
   });
-
-  console.log("currentUser: ", currentUser);
 
   req.user = currentUser as User;
   next();

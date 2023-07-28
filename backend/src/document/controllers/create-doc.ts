@@ -12,6 +12,8 @@ export const createDoc = async (
 
   if (!content) content = "";
 
+  console.log(title, content, req.user);
+
   const document = await prisma.document
     .create({
       data: {
@@ -19,14 +21,13 @@ export const createDoc = async (
         content,
         user: {
           connect: {
-            id: "b84233dc-487c-46e9-b250-a3b7e4f5326f",
-            // id: req.user?.id,
+            id: req.user?.id,
           },
         },
         Collaborator: {
           create: {
-            userId: "b84233dc-487c-46e9-b250-a3b7e4f5326f",
-            // userId: req.user?.id as string,
+            userId: req.user?.id!,
+            permission: "EDIT",
           },
         },
       },
@@ -34,7 +35,10 @@ export const createDoc = async (
         Collaborator: true,
       },
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      console.log(err.message);
+      next(err);
+    });
 
   res.status(201).json({
     message: "docs created",
