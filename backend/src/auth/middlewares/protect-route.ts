@@ -30,12 +30,16 @@ export const authProtected = async (
 
   const { id } = decoded;
 
-  const currentUser = await prisma.user.findFirst({
-    where: {
-      id,
-    },
-  });
+  try {
+    const currentUser = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
 
-  req.user = currentUser as User;
-  next();
+    req.user = currentUser as User;
+    next();
+  } catch (err) {
+    console.log(err);
+  }
 };

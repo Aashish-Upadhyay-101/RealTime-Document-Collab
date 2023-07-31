@@ -6,42 +6,49 @@ export const createDoc = async (
   res: Response,
   next: NextFunction
 ) => {
-  let { title, content } = req.body;
+  try {
+    let { title, content } = req.body;
 
-  if (!title) title = "Untitled";
+    if (!title) title = "Untitled";
 
-  if (!content) content = "";
+    if (!content) content = "";
 
-  console.log(title, content, req.user);
+    console.log(title, content, req.user);
 
-  const document = await prisma.document
-    .create({
-      data: {
-        title,
-        content,
-        user: {
-          connect: {
-            id: req.user?.id,
+    const document = await prisma.document
+      .create({
+        data: {
+          title,
+          content,
+          user: {
+            connect: {
+              id: req.user?.id,
+            },
+          },
+          Collaborator: {
+            create: {
+              userId: req.user?.id!,
+              permission: "EDIT",
+            },
           },
         },
-        Collaborator: {
-          create: {
-            userId: req.user?.id!,
-            permission: "EDIT",
-          },
+        include: {
+          Collaborator: true,
         },
-      },
-      include: {
-        Collaborator: true,
-      },
-    })
-    .catch((err) => {
-      console.log(err.message);
-      next(err);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        next(err);
+      });
+
+    res.status(201).json({
+      message: "docs created",
+      document,
     });
-
-  res.status(201).json({
-    message: "docs created",
-    document,
-  });
+  } catch (err: any) {
+    res.json({
+      message: "failed",
+      error: err.message,
+    });
+  }
 };

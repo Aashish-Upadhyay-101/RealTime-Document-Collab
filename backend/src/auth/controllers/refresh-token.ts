@@ -10,31 +10,40 @@ export const refreshToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req.header("x-refresh-token");
+  try {
+    const refreshToken = req.header("x-refresh-token");
 
-  if (!refreshToken) {
-    return next(new NotAuthorized("Refresh token not found"));
+    if (!refreshToken) {
+      return next(new NotAuthorized("Refresh token not found"));
+    }
+
+    const token = await prisma.refreshToken.findFirst({
+      where: {
+        token: refreshToken,
+      },
+    });
+
+    if (!token) {
+      return next(new Forbidden("Invalid refresh token"));
+    }
+
+    const accessToken = Token.generateNewAccessTokenWithRefreshToken(
+      token.token
+    );
+    const newTokenPair = {
+      access: accessToken,
+      refresh: refreshToken,
+    };
+
+    setAuthCookie(res, newTokenPair);
+
+    res.status(201).json({
+      access: accessToken,
+    });
+  } catch (err: any) {
+    res.json({
+      message: "failed",
+      error: err.message,
+    });
   }
-
-  const token = await prisma.refreshToken.findFirst({
-    where: {
-      token: refreshToken,
-    },
-  });
-
-  if (!token) {
-    return next(new Forbidden("Invalid refresh token"));
-  }
-
-  const accessToken = Token.generateNewAccessTokenWithRefreshToken(token.token);
-  const newTokenPair = {
-    access: accessToken,
-    refresh: refreshToken,
-  };
-
-  setAuthCookie(res, newTokenPair);
-
-  res.status(201).json({
-    access: accessToken,
-  });
 };
